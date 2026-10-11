@@ -1,0 +1,13 @@
+<mujoco model="solvability_bar">
+  <statistic center="0 0 0.5" extent="1"/>
+  <visual>
+    <global azimuth="90" elevation="0"/>
+  </visual>
+  <asset>
+    <texture name="white_background" type="skybox" builtin="flat"
+             rgb1="1 1 1" rgb2="1 1 1" width="256" height="1536"/>
+  </asset>
+  <worldbody>
+    <light pos="0 -2 2" dir="0 1 -1"/>
+  </worldbody>
+</mujoco>

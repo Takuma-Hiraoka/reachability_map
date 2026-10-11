@@ -1,0 +1,25 @@
+repositories:
+  ik_solver2:
+    type: git
+    url: https://github.com/Takuma-Hiraoka/ik_solver2.git
+    version: main
+  mujoco_vendor:
+    type: git
+    url: https://github.com/pal-robotics/mujoco_vendor.git
+    version: master
+  mujoco_viewer:
+    type: git
+    url: https://github.com/Takuma-Hiraoka/mujoco_viewer.git
+    version: master
+  osqp_eigen_vendor:
+    type: git
+    url: https://github.com/Takuma-Hiraoka/osqp_eigen_vendor.git
+    version: main
+  prioritized_qp2:
+    type: git
+    url: https://github.com/Takuma-Hiraoka/prioritized_qp2.git
+    version: main
+  pinocchio_model_builder:
+    type: git
+    url: https://github.com/Takuma-Hiraoka/pinocchio_model_builder.git
+    version: main
