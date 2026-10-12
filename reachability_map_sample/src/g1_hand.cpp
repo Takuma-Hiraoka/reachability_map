@@ -11,23 +11,22 @@
 int main() {
   try {
     // Edit the sample settings here, then rebuild.
-    const std::string side = "right";
+    const std::string side = "left";
     const std::string output = "g1_" + side + "_hand.yaml";
-    const int threadNum = 1;
+    const int threadNum = 30;
     const std::string share = ament_index_cpp::get_package_share_directory("reachability_map_sample");
     const std::string robotDir = share + "/unitree_ros/robots/g1_description";
 
     reachability_map::ReachabilityMapParam param;
-    param.posResolution = 0.1;
-    param.size = Eigen::Vector3d(0.6, 0.6, 0.6);
-    param.testPerGrid = 5;
-    param.initialSolutionNum = 2;
-    param.positionPrecision = 0.01;
-    param.rotationPrecision = 0.1;
+    param.posResolution = 0.05;
+    param.size = Eigen::Vector3d(1.5, 1.5, 1.5);
+    param.testPerGrid = 10;
+    param.initialSolutionNum = 10;
+    param.positionPrecision = 0.001;
+    param.rotationPrecision = 0.001;
     param.weight.setOnes();
     param.seed = 1;
     param.pikParam.maxIteration = 50;
-    param.pikParam.convergeThre = 1e-6;
     const double baseHeight = 0.80;
     const std::string urdfPath = robotDir + "/g1_29dof.urdf";
     // Keep a full model for displaying the fixed joints and floating-base pose in MJCF.
@@ -37,6 +36,7 @@ int main() {
     displayConfiguration[2] = baseHeight;
 
     const std::vector<std::string> jointNames{"shoulder_pitch", "shoulder_roll", "shoulder_yaw", "elbow", "wrist_roll", "wrist_pitch", "wrist_yaw"};
+    const std::string endEffectorJointName = side + "_wrist_yaw_joint";
     std::vector<std::string> movableJointNames;
     for(const std::string& name : jointNames) {
       const std::string full = side + "_" + name + "_joint";
@@ -72,17 +72,14 @@ int main() {
     }
     std::cout << "IK model DOFs: " << param.robot->nv << std::endl;
     reachability_map::EndEffector ee;
-    ee.parent = param.robot->getJointId(movableJointNames.back());
-    ee.localPose.translation() = Eigen::Vector3d(0.10, 0, 0);
+    if(!param.robot->existJointName(endEffectorJointName))
+      throw std::runtime_error("Missing end-effector joint: " + endEffectorJointName);
+    ee.parent = param.robot->getJointId(endEffectorJointName);
+    ee.localPose.translation() = Eigen::Vector3d(0.1, 0, 0);
     param.endEffectors.push_back(ee);
     pinocchio::Data data(*param.robot);
     pinocchio::forwardKinematics(*param.robot, data, param.configuration);
     param.origin = (data.oMi[ee.parent] * ee.localPose).translation();
-    param.progress = [](std::size_t completed, std::size_t total, double) {
-      if(completed == total || completed % std::max<std::size_t>(1, total/20) == 0)
-        std::cout << "Cells evaluated: " << completed << '/' << total << std::endl;
-    };
-
     reachability_map::ReachabilityMap map;
     std::cout << "Computing G1 " << side << " hand reachability map" << std::endl;
     reachability_map::createMap(param, map, threadNum);

@@ -78,11 +78,6 @@ int main() {
     pinocchio::Data data(*param.robot);
     pinocchio::forwardKinematics(*param.robot, data, param.configuration);
     param.origin = (data.oMi[ee.parent] * ee.localPose).translation();
-    param.progress = [](std::size_t completed, std::size_t total, double) {
-      if(completed == total || completed % std::max<std::size_t>(1, total/20) == 0)
-        std::cout << "Cells evaluated: " << completed << '/' << total << std::endl;
-    };
-
     reachability_map::ReachabilityMap map;
     std::cout << "Computing G1 " << side << " foot reachability map" << std::endl;
     reachability_map::createMap(param, map, threadNum);

@@ -8,6 +8,8 @@
 #include <cmath>
 #include <exception>
 #include <fstream>
+#include <functional>
+#include <iostream>
 #include <limits>
 #include <mutex>
 #include <random>
@@ -167,9 +169,13 @@ void createMap(const ReachabilityMapParam& p, ReachabilityMap& map, int thread_n
           if(solved) ++successes;
         }
         rates[index] = static_cast<double>(successes) / p.testPerGrid;
-        if(p.progress) {
+        {
           std::lock_guard<std::mutex> lock(progressMutex);
-          p.progress(++completed, total, rates[index]);
+          ++completed;
+          if(completed == total ||
+             completed % std::max<std::size_t>(1, total / 100) == 0) {
+            std::cout << "Cells evaluated: " << completed << '/' << total << std::endl;
+          }
         }
       }
     } catch(...) {

@@ -11,7 +11,7 @@ int main() {
   try {
     // Edit the saved-map path and display settings here, then rebuild.
     const std::string share = ament_index_cpp::get_package_share_directory("reachability_map_sample");
-    const std::string input = share + "/config/g1_right_hand.yaml";
+    const std::string input = share + "/config/g1_left_hand.yaml";
     const std::string robotDir = share + "/unitree_ros/robots/g1_description";
     reachability_map::ReachabilityMap map;
     reachability_map::readMap(input, map);

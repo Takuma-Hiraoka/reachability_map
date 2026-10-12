@@ -4,7 +4,6 @@
 #include <prioritized_inverse_kinematics_solver/prioritized_inverse_kinematics_solver.h>
 #include <pinocchio/spatial/se3.hpp>
 #include <cstdint>
-#include <functional>
 #include <string>
 
 namespace reachability_map {
@@ -32,8 +31,6 @@ struct ReachabilityMapParam {
   Eigen::Matrix<double, 6, 1> weight = Eigen::Matrix<double, 6, 1>::Ones();
   std::uint32_t seed = 1;
   prioritized_inverse_kinematics_solver::IKParam pikParam;
-  // Serialized worker callback: completed, total, latest success rate. No GUI calls.
-  std::function<void(std::size_t, std::size_t, double)> progress;
   ReachabilityMapParam() { pikParam.maxIteration = 50; pikParam.convergeThre = 1e-6; }
 };
 
